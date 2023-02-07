@@ -2,8 +2,8 @@
 """
 Module contains the BaseModel class
 """
-import uuid
-import datetime
+from uuid import uuid4
+from datetime import datetime
 
 
 class BaseModel:
@@ -28,12 +28,12 @@ __dict__ of the instance
         """
         if kwargs:
             self.__dict__ = {key:value for key, value in kwargs.items()}
-            self.created_at = datetime.datetime.fromisoformat(self.created_at)
-            self.updated_at = datetime.datetime.fromisoformat(self.updated_at)
+            self.created_at = datetime.fromisoformat(self.created_at)
+            self.updated_at = datetime.fromisoformat(self.updated_at)
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.datetime.now()
-            self.updated_at = datetime.datetime.now()
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """
@@ -47,7 +47,7 @@ __dict__ of the instance
         updates the public instance attribute updated_at with \
 the current datetime
         """
-        self.updated_at = datetime.datetime.now()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """
@@ -56,7 +56,7 @@ of the instance
         """
         dict_repr = self.__dict__
         for key, value in dict_repr.items():
-            if type(dict_repr[key]) is datetime.datetime:
+            if type(dict_repr[key]) is datetime:
                 dict_repr[key] = value.isoformat()
         dict_repr["__class__"] = type(self).__name__
         return dict_repr
