@@ -54,9 +54,10 @@ the current datetime
         returns a dictionary containing all keys/values of __dict__ \
 of the instance
         """
-        dict_repr = self.__dict__
-        for key, value in dict_repr.items():
-            if type(dict_repr[key]) is datetime:
+        dict_repr = {}
+        for key, value in self.__dict__.items():
+            if type(self.__dict__[key]) is datetime:
                 dict_repr[key] = value.isoformat()
-        dict_repr["__class__"] = type(self).__name__
+            else:
+                dict_repr[key] = value
         return dict_repr
