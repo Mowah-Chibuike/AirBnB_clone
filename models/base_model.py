@@ -4,6 +4,7 @@ Module contains the BaseModel class
 """
 from uuid import uuid4
 from datetime import datetime
+from . import storage
 
 
 class BaseModel:
@@ -27,13 +28,15 @@ __dict__ of the instance
         Function is called whenever an instance is created
         """
         if kwargs:
-            self.__dict__ = {key:value for key, value in kwargs.items()}
+            self.__dict__ = {key: value for key, value in kwargs.items()}
             self.created_at = datetime.fromisoformat(self.created_at)
             self.updated_at = datetime.fromisoformat(self.updated_at)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
+
 
     def __str__(self):
         """
@@ -48,6 +51,7 @@ __dict__ of the instance
 the current datetime
         """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
