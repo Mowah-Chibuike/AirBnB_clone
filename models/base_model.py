@@ -60,4 +60,5 @@ of the instance
                 dict_repr[key] = value.isoformat()
             else:
                 dict_repr[key] = value
+        dict_repr["__class__"] = type(self).__name__
         return dict_repr
