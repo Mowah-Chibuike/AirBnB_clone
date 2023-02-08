@@ -37,6 +37,7 @@ __dict__ of the instance
             self.updated_at = datetime.now()
             storage.new(self)
 
+
     def __str__(self):
         """
         Returns the string representation of the instance
