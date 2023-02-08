@@ -39,5 +39,5 @@ class FileStorage:
         try:
             with open(self.__file_path, mode='r') as file:
                 self.__objects = json.load(file)
-        except FileExistsError:
+        except (FileExistsError, FileNotFoundError):
             pass
