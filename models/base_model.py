@@ -2,6 +2,7 @@
 """
 Module contains the BaseModel class
 """
+import sys
 import uuid
 import datetime
 from __init__ import storage
@@ -32,7 +33,6 @@ __dict__ of the instance
             self.created_at = datetime.datetime.fromisoformat(self.created_at)
             self.updated_at = datetime.datetime.fromisoformat(self.updated_at)
         else:
-            storage.new()
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
@@ -50,7 +50,6 @@ __dict__ of the instance
 the current datetime
         """
         self.updated_at = datetime.datetime.now()
-        storage.save()
 
     def to_dict(self):
         """
@@ -65,15 +64,12 @@ of the instance
         return dict_repr
 
 
-all_objs = storage.all()
-print("-- Reloaded objects --")
-for obj_id in all_objs.keys():
-    obj = all_objs[obj_id]
-    print(obj)
-
+print(globals())
+print(dir(sys.modules))
 print("-- Create a new object --")
 my_model = BaseModel()
-my_model.name = "My_First_Model"
-my_model.my_number = 89
-my_model.save()
 print(my_model)
+
+storage.new(my_model)
+print(storage.all())
+storage.save()
