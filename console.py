@@ -12,6 +12,7 @@ class HBNBCommand(cmd.Cmd):
     Command interpreter for the HBNB console
     """
     prompt = "(hbnb) "
+    # Stored all supported classes in an associative array i.e dictionary
     __class_dict = {'BaseModel': BaseModel}
 
     def emptyline(self):
@@ -27,6 +28,7 @@ the id
         elif clsname not in self.__class_dict:
             print("** class doesn't exist **")
         else:
+            # get the class from the associative array
             new = self.__class_dict[clsname]()
             new.save()
             print(new.id)
@@ -39,6 +41,7 @@ id
         if not inst_attr:
             print("** class name missing **")
         else:
+            # splitted the arguments based on the space character
             args = inst_attr.split()
             if args[0] not in self.__class_dict:
                 print("** class doesn't exist **")
@@ -46,6 +49,7 @@ id
             if len(args) < 2:
                 print("** instance id missing **")
                 return
+            # recreate the key from the arguments passed
             key = "{}.{}".format(args[0], args[1])
             if key in storage.all():
                 value = storage.all()[key]
@@ -105,8 +109,11 @@ attribute
         if not param:
             print("** class name missing **")
         else:
+            # split params based on the double quote character (")
             args = param.split('"')
+            # then split the first element of the list based on space 
             inner = args.pop(0).split()
+            # Reinsert them in their correct positions
             for idx, item in enumerate(inner):
                 args.insert(idx, item)
             if args[0] not in self.__class_dict:
@@ -123,8 +130,10 @@ attribute
                 if len(args) < 4:
                     print("** value missing **")
                 obj_dict = storage.all()[key]
+                # check if it's a numeric value and convert it to an integer
                 if args[3].isnumeric():
                     value = int(args[3])
+                #check if it is a float and convert it to a float
                 elif "." in args[3]:
                     to_validate = ""
                     for item in args[3].split("."):
