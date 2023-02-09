@@ -28,7 +28,9 @@ __dict__ of the instance
         Function is called whenever an instance is created
         """
         if kwargs:
-            self.__dict__ = {key: value for key, value in kwargs.items()}
+            self.__dict__ = {
+                key: value for key, value in kwargs.items() if key != "\
+__class__"}
             self.created_at = datetime.fromisoformat(self.created_at)
             self.updated_at = datetime.fromisoformat(self.updated_at)
         else:
@@ -36,7 +38,6 @@ __dict__ of the instance
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             storage.new(self)
-
 
     def __str__(self):
         """
