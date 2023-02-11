@@ -44,13 +44,15 @@ class FileStorage:
         (__file_path) exists ; otherwise, do nothing. If the file doesn’t\
         exist, no exception should be raised
         """
+        class_dict = {'BaseModel': BaseModel, 'User': User}
         try:
             with open(self.__file_path, mode='r', encoding='utf-8') as file:
                 file.seek(0, 0)
                 dict_loaded = json.load(file)
                 for key, value in dict_loaded.items():
                     class_name = value.pop("__class__")
-                    class_ = globals()[class_name]
+                    # Why don't we make use of an associative array instead
+                    class_ = class_dict[class_name]
                     obj = class_(**value)
                     self.__objects[key] = obj
         except (FileExistsError, FileNotFoundError):

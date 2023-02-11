@@ -4,6 +4,7 @@ Module contains the HBNBCommand class
 """
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -13,7 +14,7 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
     # Stored all supported classes in an associative array i.e dictionary
-    __class_dict = {'BaseModel': BaseModel}
+    __class_dict = {'BaseModel': BaseModel, 'User': User}
 
     def emptyline(self):
         pass
@@ -53,8 +54,7 @@ id
             key = "{}.{}".format(args[0], args[1])
             if key in storage.all():
                 value = storage.all()[key]
-                cls_of_inst = self.__class_dict[value["__class__"]]
-                print(cls_of_inst(**value))
+                print(value)
             else:
                 print("** no instance found **")
 
@@ -87,18 +87,14 @@ name.
         obj_list = []
         if not clsname:
             for value in storage.all().values():
-                cls_of_inst = self.__class_dict[value["__class__"]]
-                new = cls_of_inst(**value)
-                obj_list.append(str(new))
+                obj_list.append(str(value))
             print(obj_list)
         elif clsname not in self.__class_dict:
             print("** class doesn't exist **")
         else:
             for key, value in storage.all().items():
                 if key.startswith(clsname):
-                    cls_of_inst = self.__class_dict[value["__class__"]]
-                    new = cls_of_inst(**value)
-                    obj_list.append(str(new))
+                    obj_list.append(str(value))
             print(obj_list)
 
     def do_update(self, param):
@@ -129,7 +125,7 @@ attribute
                     return
                 if len(args) < 4:
                     print("** value missing **")
-                obj_dict = storage.all()[key]
+                obj = storage.all()[key]
                 # check if it's a numeric value and convert it to an integer
                 if args[3].isnumeric():
                     value = int(args[3])
@@ -142,7 +138,7 @@ attribute
                         value = float(args[3])
                 else:
                     value = args[3]
-                obj_dict[args[2]] = value
+                obj.__dict__[args[2]] = value
                 storage.save()
             else:
                 print("** no instance found **")
