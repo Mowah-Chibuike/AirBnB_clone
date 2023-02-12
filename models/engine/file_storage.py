@@ -5,6 +5,11 @@ Module contains the FileStorage class
 import json
 from models.base_model import BaseModel
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -14,7 +19,15 @@ class FileStorage:
 
     __file_path = "./file.json"
     __objects = {}
-    __class_dict = {'BaseModel': BaseModel, 'User': User}
+    __class_dict = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Place': Place,
+        'Review': Review
+    }
 
     def all(self):
         """
