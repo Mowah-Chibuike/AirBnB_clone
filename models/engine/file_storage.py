@@ -5,7 +5,11 @@ Module contains the FileStorage class
 import json
 from models.base_model import BaseModel
 from models.user import User
-
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 class FileStorage:
     """
@@ -14,6 +18,7 @@ class FileStorage:
 
     __file_path = "./file.json"
     __objects = {}
+    __class_dict = {'BaseModel': BaseModel, 'User': User, 'Place': Place, 'State': State, 'City': City, 'Amenity': Amenity, 'Review': Review}
 
     def all(self):
         """
@@ -44,7 +49,6 @@ class FileStorage:
         (__file_path) exists ; otherwise, do nothing. If the file doesn’t\
         exist, no exception should be raised
         """
-        class_dict = {'BaseModel': BaseModel, 'User': User}
         try:
             with open(self.__file_path, mode='r', encoding='utf-8') as file:
                 file.seek(0, 0)
@@ -52,7 +56,7 @@ class FileStorage:
                 for key, value in dict_loaded.items():
                     class_name = value.pop("__class__")
                     # Why don't we make use of an associative array instead
-                    class_ = class_dict[class_name]
+                    class_ = self.__class_dict[class_name]
                     obj = class_(**value)
                     self.__objects[key] = obj
         except (FileExistsError, FileNotFoundError):
