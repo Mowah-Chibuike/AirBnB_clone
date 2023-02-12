@@ -102,13 +102,18 @@ name.
     def do_update(self, param):
         """
 Updates an instance based on the class name and id by adding or updating \
-attribute
+attribute 
         """
         if not param:
             print("** class name missing **")
         else:
-            param = param.replace("\"", "")
-            args = param.split()
+            # split params based on the double quote character (")
+            args = param.split('"')
+            # then split the first element of the list based on space 
+            inner = args.pop(0).split()
+            # Reinsert them in their correct positions
+            for idx, item in enumerate(inner):
+                args.insert(idx, item)
             len_args = len(args)
             if args[0] not in self.__class_dict:
                 print("** class doesn't exist **")
