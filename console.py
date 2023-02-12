@@ -15,6 +15,8 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     # Stored all supported classes in an associative array i.e dictionary
     __class_dict = {'BaseModel': BaseModel, 'User': User}
+    # Stored all objects from storage
+    __objects = storage.all()
 
     def emptyline(self):
         pass
@@ -52,8 +54,8 @@ id
                 return
             # recreate the key from the arguments passed
             key = "{}.{}".format(args[0], args[1])
-            if key in storage.all():
-                value = storage.all()[key]
+            if key in self.__objects:
+                value = self.__objects[key]
                 print(value)
             else:
                 print("** no instance found **")
@@ -73,8 +75,8 @@ Deletes an instance based on the class name and id
                 print("** instance id missing **")
                 return
             key = "{}.{}".format(args[0], args[1])
-            if key in storage.all():
-                del (storage.all()[key])
+            if key in self.__objects:
+                del (self.__objects[key])
                 storage.save()
             else:
                 print("** no instance found **")
@@ -86,13 +88,13 @@ name.
         """
         obj_list = []
         if not clsname:
-            for value in storage.all().values():
+            for value in self.__objects.values():
                 obj_list.append(str(value))
             print(obj_list)
         elif clsname not in self.__class_dict:
             print("** class doesn't exist **")
         else:
-            for key, value in storage.all().items():
+            for key, value in self.__objects.items():
                 if key.startswith(clsname):
                     obj_list.append(str(value))
             print(obj_list)
@@ -112,32 +114,31 @@ attribute
             # Reinsert them in their correct positions
             for idx, item in enumerate(inner):
                 args.insert(idx, item)
+            len_args = len(args)
             if args[0] not in self.__class_dict:
                 print("** class doesn't exist **")
                 return
-            if len(args) < 2:
+            if len_args < 2:
                 print("** instance id missing **")
                 return
             key = "{}.{}".format(args[0], args[1])
-            if key in storage.all():
-                if len(args) < 3:
+            if key in self.__objects:
+                if len_args < 3:
                     print("** attribute name missing **")
                     return
-                if len(args) < 4:
+                if len_args < 4:
                     print("** value missing **")
-                obj = storage.all()[key]
+                    return
+                obj = self.__objects[key]
                 # check if it's a numeric value and convert it to an integer
-                if args[3].isnumeric():
+                if args[3].isdigit():
                     value = int(args[3])
-                #check if it is a float and convert it to a float
-                elif "." in args[3]:
-                    to_validate = ""
-                    for item in args[3].split("."):
-                        to_validate += item
-                    if to_validate.isnumeric():
-                        value = float(args[3])
+                # check if it is a float and convert it to a float
                 else:
-                    value = args[3]
+                    try:
+                        value = float(args[3])
+                    except (ValueError, TypeError):
+                        value = args[3]
                 obj.__dict__[args[2]] = value
                 storage.save()
             else:
