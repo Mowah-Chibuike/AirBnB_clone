@@ -30,7 +30,7 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         self.store.save()
         with open("./file.json", "a+", encoding="utf-8") as file:
-            file.seek(0,0)
+            file.seek(0, 0)
             test_str = file.read()
         test_dict = json.loads(test_str)
         expected = {}
@@ -39,7 +39,9 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(len(test_dict), len(expected))
 
     def test_reload(self):
-        test_dict = {key: BaseModel(**value.to_dict()) for key, value in self.store.all().items()}
+        test_dict = {
+            key: BaseModel(
+                **value.to_dict()) for key, value in self.store.all().items()}
         length = len(self.store.all())
         for i in range(length):
             self.store.all().popitem()
