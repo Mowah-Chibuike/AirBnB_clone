@@ -35,8 +35,7 @@ __class__"}
             self.updated_at = datetime.fromisoformat(self.updated_at)
         else:
             self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.created_at = self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):

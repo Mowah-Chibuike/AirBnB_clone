@@ -5,7 +5,13 @@ Module contains the HBNBCommand class
 import cmd
 from models.base_model import BaseModel
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 from models import storage
+import json
 
 
 class HBNBCommand(cmd.Cmd):
@@ -14,7 +20,15 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
     # Stored all supported classes in an associative array i.e dictionary
-    __class_dict = {'BaseModel': BaseModel, 'User': User}
+    __class_dict = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'Place': Place,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Review': Review
+    }
     # Stored all objects from storage
     __objects = storage.all()
 
@@ -102,14 +116,14 @@ name.
     def do_update(self, param):
         """
 Updates an instance based on the class name and id by adding or updating \
-attribute 
+attribute
         """
         if not param:
             print("** class name missing **")
         else:
             # split params based on the double quote character (")
             args = param.split('"')
-            # then split the first element of the list based on space 
+            # then split the first element of the list based on space
             inner = args.pop(0).split()
             # Reinsert them in their correct positions
             for idx, item in enumerate(inner):
@@ -140,12 +154,158 @@ attribute
                     except (ValueError, TypeError):
                         value = args[3]
                 obj.__dict__[args[2]] = value
-                storage.save()
+                obj.save()
             else:
                 print("** no instance found **")
 
+    def do_User(self, line):
+        """
+Handles all specific User commands
+        """
+        if not line.endswith(")") \
+                and line.count(")") != 1 and line.count(")") != 1:
+            return cmd.Cmd.default(self, "User" + line)
+        args_list = parse(line)
+        if line == ".all()":
+            return cmd.Cmd.onecmd(self, "all User")
+        if line == ".count()":
+            count = 0
+            for key in self.__objects.keys():
+                if key.startswith("User"):
+                    count += 1
+            print(count)
+        elif args_list[0] == "show":
+            return cmd.Cmd.onecmd(self, "show User " + args_list[1].strip('"'))
+        elif args_list[0] == "destroy":
+            return cmd.Cmd.onecmd(
+                self, "destroy User " + args_list[1].strip('"'))
+        elif args_list[0] == "update":
+            try:
+                args = args_list[1].split(", ", 1)
+                user_id = args[0].strip('"')
+                key = "User." + user_id
+                if key not in self.__objects and user_id:
+                    print("** no instance found **")
+                    return
+                update_dict = json.loads(args[1].replace("'", '"'))
+                for key, value in update_dict.items():
+                    cmd.Cmd.onecmd(
+                        self, 'update User {} {} "{}"'.format(
+                            user_id, key, value))
+            except Exception:
+                args_str = ""
+                args = args_list[1].split(", ")
+                for idx, token in enumerate(args):
+                    if idx != 0:
+                        args_str += " "
+                    if idx == 0 or idx == 1:
+                        args_str += token.strip('"')
+                    else:
+                        args_str += token
+                return cmd.Cmd.onecmd(self, "update User " + args_str)
+        else:
+            return cmd.Cmd.default(self, "User" + line)
+
+    def do_State(self, line):
+        """
+Handles specific State commands
+        """
+        if not line.endswith(")") \
+                and line.count(")") != 1 and line.count(")") != 1:
+            return cmd.Cmd.default(self, "State" + line)
+        args_list = parse(line)
+        if line == ".all()":
+            return cmd.Cmd.onecmd(self, "all State")
+        if line == ".count()":
+            count = 0
+            for key in self.__objects.keys():
+                if key.startswith("State"):
+                    count += 1
+            print(count)
+        elif args_list[0] == "show":
+            return cmd.Cmd.onecmd(
+                self, "show State " + args_list[1].strip('"'))
+        elif args_list[0] == "destroy":
+            return cmd.Cmd.onecmd(
+                self, "destroy State " + args_list[1].strip('"'))
+        elif args_list[0] == "update":
+            try:
+                args = args_list[1].split(", ", 1)
+                user_id = args[0].strip('"')
+                key = "State." + state_id
+                if key not in self.__objects and user_id:
+                    print("** no instance found **")
+                    return
+                update_dict = json.loads(args[1].replace("'", '"'))
+                for key, value in update_dict.items():
+                    cmd.Cmd.onecmd(
+                        self, 'update State {} {} "{}"'.format(
+                            user_id, key, value))
+            except Exception:
+                args_str = ""
+                args = args_list[1].split(", ")
+                for idx, token in enumerate(args):
+                    if idx != 0:
+                        args_str += " "
+                    if idx == 0 or idx == 1:
+                        args_str += token.strip('"')
+                    else:
+                        args_str += token
+                    return cmd.Cmd.onecmd(self, "update State " + args_str)
+        else:
+            return cmd.Cmd.default(self, "State" + line)
+
+    def do_BaseModel(self, line):
+        """
+        """
+        if not line.endswith(")") \
+                and line.count(")") != 1 and line.count(")") != 1:
+            return cmd.Cmd.default(self, "BaseModel" + line)
+        args_list = parse(line)
+        if line == ".all()":
+            return cmd.Cmd.onecmd(self, "all BaseModel")
+        if line == ".count()":
+            count = 0
+            for key in self.__objects.keys():
+                if key.startswith("BaseModel"):
+                    count += 1
+            print(count)
+        elif args_list[0] == "show":
+            return cmd.Cmd.onecmd(
+                self, "show BaseModel " + args_list[1].strip('"'))
+        elif args_list[0] == "destroy":
+            return cmd.Cmd.onecmd(
+                self, "destroy BaseModel " + args_list[1].strip('"'))
+        elif args_list[0] == "update":
+            try:
+                args = args_list[1].split(", ", 1)
+                user_id = args[0].strip('"')
+                key = "BaseModel." + user_id
+                if key not in self.__objects and user_id:
+                    print("** no instance found **")
+                    return
+                update_dict = json.loads(args[1].replace("'", '"'))
+                for key, value in update_dict.items():
+                    cmd.Cmd.onecmd(
+                        self, 'update BaseModel {} {} "{}"'.format(
+                            user_id, key, value))
+            except Exception:
+                args_str = ""
+                args = args_list[1].split(", ")
+                for idx, token in enumerate(args):
+                    if idx != 0:
+                        args_str += " "
+                    if idx == 0 or idx == 1:
+                        args_str += token.strip('"')
+                    else:
+                        args_str += token
+                return cmd.Cmd.onecmd(self, "update BaseModel " + args_str)
+        else:
+            return cmd.Cmd.default(self, "BaseModel" + line)
+
     def do_quit(self, s):
         """
+
 Quit command to exit the program
         """
         return True
@@ -156,6 +316,15 @@ Intepretes the Ctrl + D shortcut(EOF) command
         """
         print()
         return True
+
+
+def parse(args):
+    """
+    Converts a string to a command for the onecmd method of the cmd module \
+to execute
+    """
+    args_str = args.strip(".").strip(")")
+    return args_str.split("(")
 
 
 if __name__ == "__main__":
