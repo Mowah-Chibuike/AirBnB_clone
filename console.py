@@ -232,7 +232,7 @@ Handles specific State commands
             try:
                 args = args_list[1].split(", ", 1)
                 user_id = args[0].strip('"')
-                key = "State." + state_id
+                key = "State." + State.state_id
                 if key not in self.__objects and user_id:
                     print("** no instance found **")
                     return
