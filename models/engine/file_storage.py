@@ -16,7 +16,6 @@ class FileStorage:
     """
     FileStorage Class
     """
-
     __file_path = "./file.json"
     __objects = {}
     __class_dict = {
