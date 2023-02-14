@@ -37,7 +37,7 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, line):
         if not line.endswith(")") \
-                or line.count(")") != 1 or line.count(")") != 1:
+                or line.count("(") != 1 or line.count(")") != 1:
             return cmd.Cmd.default(self, line)
         dot_idx = line.find(".")
         obj_name = line[:dot_idx]
