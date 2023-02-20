@@ -65,6 +65,7 @@
 }
 
 .popover h2 {
+  font-size: 16px;
   margin-left: 10%;
 }
 
@@ -74,7 +75,7 @@
 
 .popover li {
   list-style-type: none;
-  padding-left: 20%;
+  padding-left: 17%;
 }
 
 .locations:hover .popover,
